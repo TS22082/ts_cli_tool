@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os/exec"
 	"regexp"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 func GACHandler(cmd *cobra.Command, args []string) {
@@ -48,5 +49,4 @@ func GACHandler(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Printf("✅ Committed with message:\n\n%s\n", gitMessage)
-	return
 }

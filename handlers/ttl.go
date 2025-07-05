@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"fmt"
+	"os"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 type model struct {
@@ -66,14 +67,14 @@ func (m model) View() string {
 
 	for i, choice := range m.choices {
 
-		cursor := " " // no cursor
+		cursor := " "
 		if m.cursor == i {
-			cursor = "→" // cursor!
+			cursor = "→"
 		}
 
-		checked := " " // not selected
+		checked := " "
 		if _, ok := m.selected[i]; ok {
-			checked = "x" // selected!
+			checked = "x"
 		}
 
 		// Render the row

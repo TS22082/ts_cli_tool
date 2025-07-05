@@ -37,8 +37,6 @@ func MDIHandler(cmd *cobra.Command, args []string) {
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().Title("Select a database").Options(dbNames...).Value(&dbName),
-		),
-		huh.NewGroup(
 			huh.NewInput().Title("Add your prompt here").Prompt("👾").Value(&prompt),
 		),
 	)
@@ -64,7 +62,6 @@ func MDIHandler(cmd *cobra.Command, args []string) {
 	chatCompletion, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.SystemMessage(`You are a helpful assistant that must return only valid JSON describing a MongoDB operation, e.g. { "operation": "find", "collection": "users", "filter": {...} }`),
-			openai.SystemMessage(`The operation should either find, or count.`),
 			openai.UserMessage(prompt),
 		},
 		Model: openai.ChatModelGPT4o,
@@ -74,11 +71,12 @@ func MDIHandler(cmd *cobra.Command, args []string) {
 		panic(err.Error())
 	}
 
-	content := chatCompletion.Choices[0].Message.Content
-	cleanContent := utils.CleanAIResponse(content)
+	promptResRaw := chatCompletion.Choices[0].Message.Content
+	promptResClean := utils.CleanAIResponse(promptResRaw)
+
 	var queryData utils.MongoQuery
 
-	queryErr := json.Unmarshal([]byte(cleanContent), &queryData)
+	queryErr := json.Unmarshal([]byte(promptResClean), &queryData)
 
 	if queryErr != nil {
 		fmt.Println("❌ Error:", queryErr)

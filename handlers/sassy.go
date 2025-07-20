@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 
 	"github.com/spf13/cobra"
@@ -9,12 +10,24 @@ import (
 
 func SassyHandler(cmd *cobra.Command, args []string) {
 
-	sassCompileCmd := exec.Command("sass", "static/src/css/style.scss", "static/dist/css/style.css")
-
-	_, err := sassCompileCmd.Output()
+	dir, err := os.Getwd()
 
 	if err != nil {
 		fmt.Println("Error:", err)
+		return
+	}
+
+	srcDir := dir + "/static/src/css/style.scss"
+	distDir := dir + "/static/dist/css/style.css"
+
+	sassCompileCmd := exec.Command("sass", srcDir, distDir)
+
+	_, err = sassCompileCmd.Output()
+
+	if err != nil {
+		fmt.Println("Error:", err)
+		fmt.Println("Src Dir:", srcDir)
+		fmt.Println("Dist Dir:", distDir)
 		return
 	}
 

@@ -7,7 +7,7 @@ import (
 )
 
 var sassyCmd = &cobra.Command{
-	Use:   "sassy <path> <path>",
+	Use:   "sassy",
 	Short: descriptions.SassyShort,
 	Long:  descriptions.SassyLong,
 	Run:   handlers.SassyHandler,
